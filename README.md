@@ -1,0 +1,17 @@
+# NFA to DFA Converter
+
+Trevor Kling
+CPSC 406: Algorithm Analysis
+Assignment 1
+
+## Introduction
+
+This program seeks to provide a framework to convert non-deterministic finite state autonomata to equivalent deterministic finite-state autonomata.  The program takes an input text file which specifies the 5-tuple defining the NFA, and then produces an output text file which then corresponds to a new, expanded DFA 5-tuple.
+
+## Specification
+The program is written in C++, using the boost library.  Compile and run on the Linux command line with g++.
+
+## Known Issues
+
+## Sources
+
