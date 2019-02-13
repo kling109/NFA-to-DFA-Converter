@@ -10,6 +10,8 @@ Project: NFA to DFA Converter
 #include <map>
 #include <set>
 #include <iostream>
+#include <stdio.h>
+#include <string.h>
 #include <fstream>
 
 #ifndef NFACONVERTER_H
@@ -34,8 +36,8 @@ class nfaConverter
       std::string **dfaAcceptStates;
       std::string **dfaStartStates;
 
-      void fileReader(std::string inputFileName);
-      void fileWriter(std::string outputFileName);
+      void fileReader(std::string* inputFileName);
+      void fileWriter(std::string* outputFileName);
       std::string* powerSetGenerator(std::string* stateSet);
       std::string** epsilonClosureGenerator(std::string* state, std::map<std::set<std::string*>,std::set<std::string*>>* delta);
       std::string** acceptStateGenerator(std::string** initalAcceptStates);
