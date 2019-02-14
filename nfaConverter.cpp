@@ -129,7 +129,8 @@ void NFAConverter::arraySetGenerator(string** iterationSet, string* stateSet, in
     nextSet[0] = "EM";
     iterationSet[startpos] = nextSet;
   }
-  else{
+  else
+  {
     int newStartPos = startpos + (combination(maxsize, currentIterationSize));
     cout << startpos << endl;
     cout << newStartPos << endl;
@@ -160,7 +161,7 @@ void NFAConverter::arraySetGenerator(string** iterationSet, string* stateSet, in
     {
       for (int i = startpos; i < newStartPos; ++i)
       {
-        if (iterationSet[i]->size() == 0)
+        if (iterationSet[i][0] == "x")
         {
           iterationSet[i] = stateSet;
           cout << "Added Element " << stateSet[0] << " at location " << i << endl;
@@ -169,7 +170,7 @@ void NFAConverter::arraySetGenerator(string** iterationSet, string* stateSet, in
     }
     for (int i = 0; i < stateSet->size(); ++i)
     {
-      string* nextSet = new string[currentIterationSize-1];
+      string* nextSet = new string[maxsize];
       int unit = 0;
       for (int j = 0; j < unit; ++j)
       {
