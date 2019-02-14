@@ -241,6 +241,10 @@ int main()
   {
     string* holderArray = new string[3];
     testPowerArray[i] = holderArray;
+    for (int j = 0; j < 3; ++j)
+    {
+      testPowerArray[i][j] = "x";
+    }
   }
   string* testArray = new string[3];
   testArray[0] = "a";
