@@ -8,7 +8,7 @@ Project: NFA to DFA Converter
 */
 
 #include <map>
-#include <set>
+#include <list>
 #include <iostream>
 #include <stdio.h>
 #include <string.h>
@@ -27,23 +27,25 @@ class nfaConverter
       std::string *alphabet;
 
       std::string *nfaStates;
-      std::map<std::set<std::string*>,std::set<std::string*>> nfaDeltaFunc;
+      std::map<std::string** ,std::list<std::string*>* > nfaDeltaFunc;
       std::string **nfaAcceptStates;
       std::string **nfaStartStates;
 
       std::string *dfaStates;
-      std::map<std::set<std::string*>,std::set<std::string*>> dfaDeltaFunc;
+      std::map<std::string**, std::list<std::string*>* > dfaDeltaFunc;
       std::string **dfaAcceptStates;
       std::string **dfaStartStates;
 
-      void fileReader(std::string* inputFileName);
-      void fileWriter(std::string* outputFileName);
+      void fileReader(std::string inputFileName);
+      void fileWriter(std::string outputFileName);
       std::string* powerSetGenerator(std::string* stateSet);
-      std::string** epsilonClosureGenerator(std::string* state, std::map<std::set<std::string*>,std::set<std::string*>>* delta);
+      std::string** epsilonClosureGenerator(std::string* state, std::map<std::string**,std::list<std::string*>* >* delta);
       std::string** acceptStateGenerator(std::string** initalAcceptStates);
       std::string** startStateGenerator(std::string** initialStartStates);
 
     public:
+      nfaConverter(void);
+      void printsystem();
       void DFAGenerator(std::string inputFileName, std::string outputFileName);
 
 };
