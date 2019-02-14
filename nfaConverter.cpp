@@ -11,12 +11,30 @@ Project: NFA to DFA Converter
 
 using namespace std;
 
-nfaConverter::nfaConverter(void)
+NFAConverter::NFAConverter(void)
 {
 
 }
 
-void nfaConverter::printsystem()
+void NFAConverter::DFAGenerator(string inputFileName, string outputFileName)
+{
+  NFAConverter::fileReader(inputFileName);
+  NFAConverter::dfaStates = NFAConverter::powerSetGenerator(NFAConverter::nfaStates);
+  for (int i = 0; i < NFAConverter::dfaStates->size(); ++i)
+  {
+    for (int j = 0; j < NFAConverter::alphabet->size(); ++j)
+    {
+      string* deltaKey = NFAConverter::dfaStates[i];
+    }
+  }
+}
+
+int main()
+{
+
+}
+
+/*void nfaConverter::printsystem()
 {
   for (int i = 0; i < nfaConverter::alphabet->size(); ++i)
   {
@@ -165,9 +183,4 @@ void testfunction()
 {
   nfaConverter* testConverter = new nfaConverter();
   testConverter->DFAGenerator("testTextFile.txt", "EMPTY");
-}
-
-int main()
-{
-  testfunction();
-}
+}*/
