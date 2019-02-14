@@ -13,26 +13,249 @@ using namespace std;
 
 NFAConverter::NFAConverter(void)
 {
-
+  NFAConverter::dfaDeltaFunc = new list<pair<string*, list<string>* > >();
 }
 
 void NFAConverter::DFAGenerator(string inputFileName, string outputFileName)
 {
   NFAConverter::fileReader(inputFileName);
   NFAConverter::dfaStates = NFAConverter::powerSetGenerator(NFAConverter::nfaStates);
-  for (int i = 0; i < NFAConverter::dfaStates->size(); ++i)
+  for (int i = 0; i < sizeof(NFAConverter::dfaStates)/sizeof(NFAConverter::dfaStates[0]); ++i)
   {
-    for (int j = 0; j < NFAConverter::alphabet->size(); ++j)
+    string* deltaKey = NFAConverter::dfaStates[i];
+    list<string>* deltaData = new list<string>();
+    for (int j = 0; j < deltaKey->size(); ++j)
     {
-      string* deltaKey = NFAConverter::dfaStates[i];
+      deltaData->merge(*epsilonClosureGenerator(deltaKey[j], NFAConverter::nfaDeltaFunc));
+    }
+    deltaData->unique();
+    if (!deltaData->empty())
+    {
+      NFAConverter::dfaDeltaFunc->push_back(pair<string*, list<string>* > (deltaKey, deltaData));
+    }
+  }
+  NFAConverter::dfaAcceptStates = acceptStateGenerator(NFAConverter::nfaAcceptStates);
+  NFAConverter::dfaStartStates = startStateGenerator(NFAConverter::nfaStartStates);
+  NFAConverter::fileWriter(outputFileName);
+}
+
+void NFAConverter::fileReader(string inputFileName)
+{
+
+}
+
+void NFAConverter::fileWriter(string outputFileName)
+{
+
+}
+
+void NFAConverter::printList(list<string>* input)
+{
+  for (int i = 0; i < input->size(); ++i)
+  {
+    cout << input->front() << " ";
+    input->push_back(input->front());
+    input->pop_front();
+  }
+  cout << endl;
+}
+
+void NFAConverter::uniqueList(list<list<string>* >* input)
+{
+  int listLength = input->size();
+  for (int i = 0; i < listLength; ++i)
+  {
+    list<string>* currentValue = input->front();
+    input->pop_front();
+    int subLength = input->size();
+    for (int j = 0; j < subLength; ++j)
+    {
+      list<string>* testValue = input->front();
+      if (*testValue == *currentValue)
+      {
+        input->pop_front();
+      }
+      else
+      {
+        input->push_back(testValue);
+        input->pop_front();
+      }
+    }
+    input->push_back(currentValue);
+  }
+}
+
+string** NFAConverter::powerSetGenerator(string* stateSet)
+{
+
+}
+
+void NFAConverter::powerSetHelper(list<list<string>* >* powerSet, list<string>* stateSet, int s)
+{
+  if (s == 0)
+  {
+    list<string>* result = new list<string>();
+    result->push_back("EM");
+    powerSet->push_back(result);
+  }
+  else
+  {
+    powerSet->push_back(stateSet);
+    for (int i = 0; i < stateSet->size(); ++i)
+    {
+      list<string>* nextSet = new list<string>();
+      list<string>* currentSet = new list<string>(*stateSet);
+      for (int j = 0; j < i; ++j)
+      {
+        nextSet->push_back(currentSet->front());
+        currentSet->pop_front();
+      }
+      currentSet->pop_front();
+      for (int k = i+1; k < stateSet->size(); ++k)
+      {
+        nextSet->push_back(currentSet->front());
+        currentSet->pop_front();
+      }
+      NFAConverter::powerSetHelper(powerSet, nextSet, s-1);
     }
   }
 }
 
-int main()
+void NFAConverter::arraySetGenerator(string** iterationSet, string* stateSet, int startpos, int maxsize, int currentIterationSize)
+{
+  if (currentIterationSize == 0)
+  {
+    string* nextSet = new string[1];
+    nextSet[0] = "EM";
+    iterationSet[startpos] = nextSet;
+  }
+  else{
+    int newStartPos = startpos + (combination(maxsize, currentIterationSize));
+    cout << startpos << endl;
+    cout << newStartPos << endl;
+    cout << currentIterationSize << endl;
+    bool newEntry = true;
+    for (int i = startpos; i < newStartPos; ++i)
+    {
+      bool totalMatch = false;
+      for (int j = 0; j < iterationSet[i]->size(); ++j)
+      {
+        if (iterationSet[i][j] == stateSet[i])
+        {
+          totalMatch = true;
+        }
+        if (totalMatch && iterationSet[i][j] != stateSet[i])
+        {
+          totalMatch = false;
+          break;
+        }
+      }
+      if (totalMatch)
+      {
+        newEntry = false;
+        break;
+      }
+    }
+    if (newEntry)
+    {
+      for (int i = startpos; i < newStartPos; ++i)
+      {
+        if (iterationSet[i]->size() == 0)
+        {
+          iterationSet[i] = stateSet;
+          cout << "Added Element " << stateSet[0] << " at location " << i << endl;
+        }
+      }
+    }
+    for (int i = 0; i < stateSet->size(); ++i)
+    {
+      string* nextSet = new string[currentIterationSize-1];
+      int unit = 0;
+      for (int j = 0; j < unit; ++j)
+      {
+        nextSet[j] = stateSet[j];
+      }
+      for (int k = unit+1; k < currentIterationSize; ++k)
+      {
+        nextSet[k-1] = stateSet[k];
+      }
+      NFAConverter::arraySetGenerator(iterationSet, nextSet, newStartPos, maxsize, currentIterationSize-1);
+    }
+  }
+}
+
+int NFAConverter::combination(int n, int r)
+{
+  return (factorial(n)/((factorial(r))*(factorial(n-r))));
+}
+
+int NFAConverter::factorial(int n)
+{
+  if (n < 2)
+  {
+    return 1;
+  }
+  else
+  {
+    return n * factorial(n-1);
+  }
+}
+
+list<string>* NFAConverter::epsilonClosureGenerator(string state, list<pair<string*, list<string>* > >* delta)
 {
 
 }
+
+string** NFAConverter::acceptStateGenerator(string* initialAcceptStates)
+{
+
+}
+
+string** NFAConverter::startStateGenerator(string* initialStartStates)
+{
+
+}
+
+int main()
+{
+  NFAConverter* testConverter = new NFAConverter();
+  list<list<string>* >* testPowerSet = new list<list<string>* >();
+  list<string>* testSet = new list<string>();
+  testSet->push_back("a");
+  testSet->push_back("b");
+  testSet->push_back("c");
+  testSet->push_back("d");
+  int x = 4;
+  testConverter->powerSetHelper(testPowerSet, testSet, x);
+  testConverter->uniqueList(testPowerSet);
+  for (int i = 0; i < testPowerSet->size(); ++i)
+  {
+    testConverter->printList(testPowerSet->front());
+    testPowerSet->push_back(testPowerSet->front());
+    testPowerSet->pop_front();
+  }
+  cout << endl;
+  cout << endl;
+  string** testPowerArray = new string*[int(pow(2, 3))];
+  for (int i = 0; i < int(pow(2, 3)); ++i)
+  {
+    string* holderArray = new string[3];
+    testPowerArray[i] = holderArray;
+  }
+  string* testArray = new string[3];
+  testArray[0] = "a";
+  testArray[1] = "b";
+  testArray[2] = "c";
+  testConverter->arraySetGenerator(testPowerArray, testArray, 0, 3, 3);
+  for (int i = 0; i < 8; ++i)
+  {
+    for (int j = 0; j < 3; ++j)
+    {
+      cout << testPowerArray[i][j] << " ";
+    }
+    cout << endl;
+  }
+};
 
 /*void nfaConverter::printsystem()
 {
