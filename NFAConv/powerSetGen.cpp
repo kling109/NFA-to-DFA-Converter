@@ -152,7 +152,7 @@ A macro for assigning the state set, building and returning the power set.
 */
 vector<vector<string>* >* PowerSetGenerator::getPowerSet(vector<string>* stateSet)
 {
-  this->powerSet = stateSet;
+  this->sourceSet = stateSet;
   buildPowerSet();
   return this->powerSet;
 }
