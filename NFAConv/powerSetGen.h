@@ -27,6 +27,7 @@ class PowerSetGenerator
   public:
     PowerSetGenerator();
     PowerSetGenerator(std::vector<std::string>* stateSet);
+    ~PowerSetGenerator();
     void buildPowerSet();
     void buildPowerSet(std::vector<std::string>* stateSet);
     std::vector<std::vector<std::string>* >* getPowerSet();

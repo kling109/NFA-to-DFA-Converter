@@ -22,6 +22,7 @@ vector, which will be filled with values.
 PowerSetGenerator::PowerSetGenerator()
 {
   this->powerSet = new vector<vector<string>* >();
+  this->sourceSet = NULL;
 }
 
 /*
@@ -32,6 +33,18 @@ PowerSetGenerator::PowerSetGenerator(vector<string>* stateSet)
 {
   this->powerSet = new vector<vector<string>* >();
   this->sourceSet = stateSet;
+}
+
+PowerSetGenerator::~PowerSetGenerator()
+{
+  if (sourceSet != 0)
+  {
+    delete this->sourceSet;
+  }
+  if (powerSet != 0)
+  {
+    delete this->powerSet;
+  }
 }
 
 /*
@@ -129,7 +142,7 @@ The function displays an error message if the program has not been provided any 
 */
 vector<vector<string>* >* PowerSetGenerator::getPowerSet()
 {
-  if (this->powerSet == 0)
+  if (this->powerSet->size() == 0)
   {
     if (this->sourceSet == 0)
     {
