@@ -16,7 +16,8 @@ Project: NFA to DFA Converter
 class EpsilonClosureGenerator
 {
   /*
-
+  Provides the methods required to find the epsilon closure of a set, given a
+  particular mapping.
   */
   private:
     std::vector<std::vector<std::string>* >* deltaMap;

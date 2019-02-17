@@ -37,10 +37,6 @@ PowerSetGenerator::PowerSetGenerator(vector<string>* stateSet)
 
 PowerSetGenerator::~PowerSetGenerator()
 {
-  if (sourceSet != 0)
-  {
-    delete this->sourceSet;
-  }
   if (powerSet != 0)
   {
     delete this->powerSet;

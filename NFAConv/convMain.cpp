@@ -3,7 +3,7 @@ Name: Trevor Kling
 ID: 002270716
 Email: kling109@mail.chapman.edu
 Course: CPSC 406 Algorithm Analysis
-Last Date Modified: 15 February 2019
+Last Date Modified: 16 February 2019
 Project: NFA to DFA Converter
 */
 
@@ -11,6 +11,7 @@ Project: NFA to DFA Converter
 #include <iostream>
 #include "powerSetGen.h"
 #include "epsilon.h"
+#include "deltaFunc.h"
 
 using namespace std;
 
@@ -57,6 +58,22 @@ int main()
   {
     cout << testClosure->at(i);
   }
-  delete testECG;
-  delete testGenerator;
+  cout << endl;
+  DeltaGenerator* testDG = new DeltaGenerator(testMap, set, testAlphabet);
+  vector<vector<vector<string>* >* >* testMapGen = testDG->powerSetDeltaMapGen();
+  for (int i = 0; i < testMapGen->size(); ++i)
+  {
+    for (int j = 0; j < testMapGen->at(i)->size(); ++j)
+    {
+      for (int k = 0; k < testMapGen->at(i)->at(j)->size(); ++k)
+      {
+        cout << testMapGen->at(i)->at(j)->at(k) << " ";
+      }
+      cout << "| ";
+    }
+    cout << endl;
+  }
+  testDG->~DeltaGenerator();
+  testECG->~EpsilonClosureGenerator();
+  testGenerator->~PowerSetGenerator();
 }
