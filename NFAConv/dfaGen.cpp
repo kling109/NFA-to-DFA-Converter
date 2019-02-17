@@ -9,8 +9,65 @@ Project: NFA to DFA Converter
 
 #include <vector>
 #include <string>
-#include "dfaGen.h"
 #include "fileIO.h"
 #include "epsilon.h"
 #include "deltaFunc.h"
 #include "powerSetGen.h"
+#include "dfaGen.h"
+
+using namespace std;
+
+DFAGenerator::DFAGenerator()
+{
+  this->inputFileName = "NULL";
+  this->outputFileName = "NULL";
+}
+
+DFAGenerator::DFAGenerator(string inputFile)
+{
+  this->inputFileName = inputFile;
+  this->outputFileName = "NULL";
+}
+
+DFAGenerator::DFAGenerator(string inputFile, string outputFile)
+{
+  this->inputFileName = inputFile;
+  this->outputFileName = outputFile;
+}
+
+DFAGenerator::~DFAGenerator()
+{
+
+}
+
+void DFAGenerator::setInputFile(string inputFile)
+{
+  this->inputFileName = inputFile;
+}
+
+void DFAGenerator::setOutputFile(string outputFile)
+{
+  this->outputFileName = outputFile;
+}
+
+void DFAGenerator::generateDFA()
+{
+
+}
+
+void DFAGenerator::generateDFA(string inputFile)
+{
+  setInputFile(inputFile);
+  generateDFA();
+}
+
+void DFAGenerator::printDFA()
+{
+
+}
+
+void DFAGenerator::printDFA(string outputFile)
+{
+  setOutputFile(outputFile);
+  printDFA();
+}

@@ -9,6 +9,10 @@ Project: NFA to DFA Converter
 
 #include <vector>
 #include <string>
+#include "fileIO.h"
+#include "epsilon.h"
+#include "deltaFunc.h"
+#include "powerSetGen.h"
 
 #ifndef DFAGEN_H
 #define DFAGEN_H
@@ -22,12 +26,13 @@ class DFAGenerator
     DFAGenerator();
     DFAGenerator(std::string inputFile);
     DFAGenerator(std::string inputFile, std::string outputFile);
+    ~DFAGenerator();
     void setInputFile(std::string inputFile);
     void setOutputFile(std::string outputFile);
     void generateDFA();
     void generateDFA(std::string inputFile);
     void printDFA();
     void printDFA(std::string outputFile);
-}
+};
 
 #endif /* DFAGEN_H */
