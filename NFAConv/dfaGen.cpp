@@ -17,39 +17,60 @@ Project: NFA to DFA Converter
 
 using namespace std;
 
+/*
+
+*/
 DFAGenerator::DFAGenerator()
 {
   this->inputFileName = "NULL";
   this->outputFileName = "NULL";
 }
 
+/*
+
+*/
 DFAGenerator::DFAGenerator(string inputFile)
 {
   this->inputFileName = inputFile;
   this->outputFileName = "NULL";
 }
 
+/*
+
+*/
 DFAGenerator::DFAGenerator(string inputFile, string outputFile)
 {
   this->inputFileName = inputFile;
   this->outputFileName = outputFile;
 }
 
+/*
+
+*/
 DFAGenerator::~DFAGenerator()
 {
 
 }
 
+/*
+
+*/
 void DFAGenerator::setInputFile(string inputFile)
 {
   this->inputFileName = inputFile;
 }
 
+/*
+
+*/
 void DFAGenerator::setOutputFile(string outputFile)
 {
   this->outputFileName = outputFile;
 }
 
+/*
+
+*/
 void DFAGenerator::generateDFA()
 {
   if (this->inputFileName != "NULL" && this->outputFileName != "NULL")
@@ -73,6 +94,7 @@ void DFAGenerator::generateDFA()
     }
     vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
     fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
+    delete fileManager;
   }
   else
   {
@@ -80,15 +102,21 @@ void DFAGenerator::generateDFA()
   }
 }
 
+/*
+
+*/
 void DFAGenerator::generateDFA(string inputFile)
 {
   setInputFile(inputFile);
   generateDFA();
 }
 
+/*
+
+*/
 void DFAGenerator::generateDFA(string inputFile, string outputFile)
 {
   setInputFile(inputFile);
-  setOutputFile(outputFile)
+  setOutputFile(outputFile);
   generateDFA();
 }

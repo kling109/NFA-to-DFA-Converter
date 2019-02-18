@@ -19,6 +19,11 @@ Project: NFA to DFA Converter
 
 class DFAGenerator
 {
+  /*
+  Provides the workflow for producing a new DFA given
+  a NFA as input.  Takes a formatted file as input, and
+  returns a formatted file as output.
+  */
   private:
     std::string inputFileName;
     std::string outputFileName;

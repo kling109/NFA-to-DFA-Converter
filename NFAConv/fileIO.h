@@ -18,9 +18,12 @@ Project: NFA to DFA Converter
 
 class FileIO
 {
+  /*
+  Provides methods for processing DFA formatted files.
+  */
   private:
-    std::ifstream* inputStream;
-    std::ofstream* outputStream;
+    std::string inputFileName;
+    std::string outputFileName;
     std::vector<std::string>* stateSet;
     std::vector<std::string>* alphabet;
     std::vector<std::vector<std::string>* >* deltaFunc;
