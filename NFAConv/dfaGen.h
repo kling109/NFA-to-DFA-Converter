@@ -31,8 +31,7 @@ class DFAGenerator
     void setOutputFile(std::string outputFile);
     void generateDFA();
     void generateDFA(std::string inputFile);
-    void printDFA();
-    void printDFA(std::string outputFile);
+    void generateDFA(std::string inputFile, std::string outputFile);
 };
 
 #endif /* DFAGEN_H */

@@ -52,7 +52,32 @@ void DFAGenerator::setOutputFile(string outputFile)
 
 void DFAGenerator::generateDFA()
 {
-
+  if (this->inputFileName != "NULL" && this->outputFileName != "NULL")
+  {
+    FileIO* fileManager = new FileIO(this->inputFileName, this->outputFileName);
+    fileManager->readFile();
+    EpsilonClosureGenerator* ecg = new EpsilonClosureGenerator(fileManager->getDelta());
+    PowerSetGenerator* psg = new PowerSetGenerator(fileManager->getStates());
+    psg->buildPowerSet();
+    vector<vector<string>* >* newSet = psg->getPowerSet();
+    DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta(), newSet, fileManager->getAlphabet());
+    vector<vector<string>* >* newStartStates = new vector<vector<string>* >();
+    for (int i = 0; i < fileManager->getStartStates()->size(); ++i)
+    {
+      newStartStates->push_back(ecg->closureOf(fileManager->getStartStates()->at(i)));
+    }
+    vector<vector<string>* >* newAcceptStates = new vector<vector<string>* >();
+    for (int i = 0; i < fileManager->getAcceptStates()->size(); ++i)
+    {
+      newAcceptStates->push_back(ecg->closureOf(fileManager->getAcceptStates()->at(i)));
+    }
+    vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
+    fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
+  }
+  else
+  {
+    cout << "The files have not been set." << endl;
+  }
 }
 
 void DFAGenerator::generateDFA(string inputFile)
@@ -61,13 +86,9 @@ void DFAGenerator::generateDFA(string inputFile)
   generateDFA();
 }
 
-void DFAGenerator::printDFA()
+void DFAGenerator::generateDFA(string inputFile, string outputFile)
 {
-
-}
-
-void DFAGenerator::printDFA(string outputFile)
-{
-  setOutputFile(outputFile);
-  printDFA();
+  setInputFile(inputFile);
+  setOutputFile(outputFile)
+  generateDFA();
 }

@@ -49,6 +49,19 @@ FileIO::FileIO(string inputFileName, string outputFileName)
   this->acceptStates = NULL;
 }
 
+FileIO::~FileIO()
+{
+  if (this->inputStream != 0)
+  {
+    delete this->inputStream;
+  }
+  if (this->outputStream != 0)
+  {
+    delete this->outputStream;
+  }
+  delete this->deltaFunc;
+}
+
 void FileIO::readFile()
 {
   if (!inputStream->is_open())

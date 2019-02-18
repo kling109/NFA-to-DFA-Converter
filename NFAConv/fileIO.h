@@ -31,6 +31,7 @@ class FileIO
     FileIO();
     FileIO(std::string inputFileName);
     FileIO(std::string inputFileName, std::string outputFileName);
+    ~FileIO();
     void readFile();
     void readFile(std::string fileName);
     void writeFile(std::vector<std::vector<std::string>* >* powerSet, std::vector<std::string>* alphabet, std::vector<std::vector<std::vector<std::string>* >* >* map, std::vector<std::vector<std::string>* >* startSet, std::vector<std::vector<std::string>* >* acceptSet);
