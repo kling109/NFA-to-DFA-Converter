@@ -17,7 +17,8 @@ Project: NFA to DFA Converter
 using namespace std;
 
 /*
-
+Default constructor for a file IO class.  Initializes
+pointers to null so they can be tested later.
 */
 FileIO::FileIO()
 {
@@ -31,7 +32,8 @@ FileIO::FileIO()
 }
 
 /*
-
+Overloaded constructor for a file IO class.  Sets the input
+file name.
 */
 FileIO::FileIO(string inputFile)
 {
@@ -45,7 +47,8 @@ FileIO::FileIO(string inputFile)
 }
 
 /*
-
+Overloaded constructor for a file IO class.  Sets the input
+file and output file names.
 */
 FileIO::FileIO(string inputFile, string outputFile)
 {
@@ -59,7 +62,7 @@ FileIO::FileIO(string inputFile, string outputFile)
 }
 
 /*
-
+Standard deconstructor function.
 */
 FileIO::~FileIO()
 {
@@ -67,7 +70,9 @@ FileIO::~FileIO()
 }
 
 /*
-
+Reads in a given file, if formatted properly.  The file reads the file in
+line by line, processing it according to the line found.  Primary work on the
+lines is done by the stringSplitter helper method.
 */
 void FileIO::readFile()
 {
@@ -103,7 +108,9 @@ void FileIO::readFile()
 }
 
 /*
-
+Helper method for processign strings.  Each string taken in is split at
+each delimiter, and then the non-delimiter portion of the string is pushed
+into a vector.  This vector is then returned.
 */
 vector<string>* FileIO::stringSplitter(string input, string delimiters)
 {
@@ -120,7 +127,8 @@ vector<string>* FileIO::stringSplitter(string input, string delimiters)
 }
 
 /*
-
+Overloaded file read method.  Simply sets the input file name, then calls
+the read funciton.
 */
 void FileIO::readFile(string fileName)
 {
@@ -129,7 +137,16 @@ void FileIO::readFile(string fileName)
 }
 
 /*
-
+A file output method for a given set of DFA parameters.  The function takes
+inputs of vectors, and processes them to give proper formatting to all elements
+being printed to the file.  The states are surrounded by braces and separated by tabs,
+while the alphabet characters are simply separated.
+File:
+Line 1: State set {q1}, {q2}, ...
+Line 2: alphabet a, b, c, ...
+Line 3: Start State(s) {s1}, {s2}, ...
+Line 4: Accept State(s) {a1}, {a2}, ...
+Line >5: Delta function definitions {q1},a = {q2}
 */
 void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alphabet, vector<vector<vector<string>* >* >* map, vector<vector<string>* >* startSet, vector<vector<string>* >* acceptSet)
 {
@@ -199,6 +216,7 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
         }
       }
     }
+    outputStream.close();
   }
 }
 
@@ -212,7 +230,7 @@ void FileIO::writeFile(string fileName, vector<vector<string>* >* powerSet, vect
 }
 
 /*
-
+Accessor method for the state Set found by a read function.
 */
 vector<string>* FileIO::getStates()
 {
@@ -220,7 +238,7 @@ vector<string>* FileIO::getStates()
 }
 
 /*
-
+Accessor method for the alphabet found by a read function.
 */
 vector<string>* FileIO::getAlphabet()
 {
@@ -228,7 +246,7 @@ vector<string>* FileIO::getAlphabet()
 }
 
 /*
-
+Accessor method for the delta funciton found by a read function.
 */
 vector<vector<string>* >* FileIO::getDelta()
 {
@@ -236,7 +254,7 @@ vector<vector<string>* >* FileIO::getDelta()
 }
 
 /*
-
+Accessor method for the start state set found by a read function.
 */
 vector<string>* FileIO::getStartStates()
 {
@@ -244,7 +262,7 @@ vector<string>* FileIO::getStartStates()
 }
 
 /*
-
+Accessor method for the accept state set found by a read function.
 */
 vector<string>* FileIO::getAcceptStates()
 {

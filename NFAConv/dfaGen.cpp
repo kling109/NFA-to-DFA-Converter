@@ -18,7 +18,8 @@ Project: NFA to DFA Converter
 using namespace std;
 
 /*
-
+Standard Constructor method.  The names are initialized to "NULL" so it can be
+checked if they have been given later.
 */
 DFAGenerator::DFAGenerator()
 {
@@ -27,7 +28,7 @@ DFAGenerator::DFAGenerator()
 }
 
 /*
-
+Overloaded Constructor method that sets the input file name.
 */
 DFAGenerator::DFAGenerator(string inputFile)
 {
@@ -36,7 +37,7 @@ DFAGenerator::DFAGenerator(string inputFile)
 }
 
 /*
-
+Overloaded Constructor method that sets the input file and output file name.
 */
 DFAGenerator::DFAGenerator(string inputFile, string outputFile)
 {
@@ -45,7 +46,7 @@ DFAGenerator::DFAGenerator(string inputFile, string outputFile)
 }
 
 /*
-
+Standard Deconstructor method.
 */
 DFAGenerator::~DFAGenerator()
 {
@@ -53,7 +54,7 @@ DFAGenerator::~DFAGenerator()
 }
 
 /*
-
+Setter method for the input file.
 */
 void DFAGenerator::setInputFile(string inputFile)
 {
@@ -61,7 +62,7 @@ void DFAGenerator::setInputFile(string inputFile)
 }
 
 /*
-
+Setter method for the output file.
 */
 void DFAGenerator::setOutputFile(string outputFile)
 {
@@ -103,7 +104,7 @@ void DFAGenerator::generateDFA()
 }
 
 /*
-
+Overloaded DFA generator method.  Sets the input file name, then generates the DFA.
 */
 void DFAGenerator::generateDFA(string inputFile)
 {
@@ -112,7 +113,8 @@ void DFAGenerator::generateDFA(string inputFile)
 }
 
 /*
-
+Overloaded DFA generator method.  Sets the input file name, the output
+file name, and generates the DFA.
 */
 void DFAGenerator::generateDFA(string inputFile, string outputFile)
 {
