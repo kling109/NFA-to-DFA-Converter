@@ -9,6 +9,7 @@ Project: NFA to DFA Converter
 
 #include <vector>
 #include <string>
+#include <iostream>
 #include "fileIO.h"
 #include "epsilon.h"
 #include "deltaFunc.h"
@@ -95,7 +96,12 @@ void DFAGenerator::generateDFA()
     }
     vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
     fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
-    delete fileManager;
+    fileManager->~FileIO();
+    ecg->~EpsilonClosureGenerator();
+    psg->~PowerSetGenerator();
+    dg->~DeltaGenerator();
+    delete newStartStates;
+    delete newAcceptStates;
   }
   else
   {

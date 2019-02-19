@@ -89,15 +89,15 @@ void FileIO::readFile()
     {
       switch(lineNum)
       {
-        case 0: stateSet = stringSplitter(line, "\t ");
+        case 0: stateSet = stringSplitter(line, "\t \n");
                 break;
-        case 1: alphabet = stringSplitter(line, "\t ");
+        case 1: alphabet = stringSplitter(line, "\t \n");
                 break;
-        case 2: startStates = stringSplitter(line, "\t ");
+        case 2: startStates = stringSplitter(line, "\t \n");
                 break;
-        case 3: acceptStates = stringSplitter(line, "\t ");
+        case 3: acceptStates = stringSplitter(line, "\t \n");
                 break;
-        default: vector<string>* mapping = stringSplitter(line, "\t =,");
+        default: vector<string>* mapping = stringSplitter(line, "\t =,\n");
                  deltaFunc->push_back(mapping);
                  break;
       }
@@ -117,9 +117,9 @@ vector<string>* FileIO::stringSplitter(string input, string delimiters)
   int pos = 0;
   int delim = 0;
   vector<string>* output = new vector<string>();
-  while (pos != input.size())
+  while (pos != -1)
   {
-    delim = input.find(delimiters, pos);
+    delim = input.find_first_of(delimiters, pos);
     output->push_back(input.substr(pos, delim - pos));
     pos = input.find_first_not_of(delimiters, delim);
   }
@@ -162,14 +162,14 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       outputStream << "{";
       for (int j = 0; j < powerSet->at(i)->size(); ++j)
       {
-        outputStream << powerSet->at(i)->at(j) << " ";
+        outputStream << powerSet->at(i)->at(j);
       }
       outputStream << "}  ";
     }
     outputStream << endl;
     for (int i = 0; i < alphabet->size(); ++i)
     {
-      outputStream << alphabet->at(i) << "  " << endl;
+      outputStream << alphabet->at(i) << "  ";
     }
     outputStream << endl;
     for (int i = 0; i < startSet->size(); ++i)
@@ -177,7 +177,7 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       outputStream << "{";
       for (int j = 0; j < startSet->at(i)->size(); ++j)
       {
-        outputStream << startSet->at(i)->at(j) << " ";
+        outputStream << startSet->at(i)->at(j);
       }
       outputStream << "}  ";
     }
@@ -187,7 +187,7 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       outputStream << "{";
       for (int j = 0; j < acceptSet->at(i)->size(); ++j)
       {
-        outputStream << acceptSet->at(i)->at(j) << " ";
+        outputStream << acceptSet->at(i)->at(j);
       }
       outputStream << "}  ";
     }
@@ -199,7 +199,7 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
         outputStream << "{";
         for (int k = 0; k < map->at(i)->at(j)->size(); ++k)
         {
-          outputStream << map->at(i)->at(j)->at(k) << " ";
+          outputStream << map->at(i)->at(j)->at(k);
         }
         outputStream << "}";
         if (j == 0)
