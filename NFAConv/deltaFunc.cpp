@@ -128,30 +128,31 @@ vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
   else
   {
     vector<vector<vector<string>* >* >* newMap = new vector<vector<vector<string>* >* >();
-    for (int i = 0; i < this->powerSet->size(); ++i)
+    for (int i = 0; i < this->deltaMap->size(); ++i)
     {
-      vector<string>* element = this->powerSet->at(i);
-      for (int j = 0; j < this->alphabet->size(); ++j)
+      // One iteration for each mapping
+      vector<string>* currentObj = this->deltaMap->at(i);
+      if (currentObj->at(1) != "EPS")
       {
-        string character = this->alphabet->at(j);
         vector<vector<string>* >* newMapEntry = new vector<vector<string>* >();
-        vector<string>* charContainer = new vector<string>();
-        charContainer->push_back(character);
-        vector<string>* endState = new vector<string>();
-        for (int k = 0; k < element->size(); ++k)
+        vector<string>* newStartState = epsilonClosure->closureOf(currentObj->at(0));
+        vector<string>* newEndState = epsilonClosure->closureOf(currentObj->at(2));
+        for (int j = 1; j < newStartState->size(); ++j)
         {
-          for (int l = 0; l < deltaMap->size(); ++l)
+          for (int k = 0; k < this->deltaMap->size(); ++k)
           {
-            vector<string>* mapping = deltaMap->at(l);
-            if (mapping->at(0) == element->at(k) && mapping->at(1) == character)
+            vector<string>* iteration = this->deltaMap->at(k);
+            if (newStartState->at(j) == iteration->at(0) && currentObj->at(1) == iteration->at(1))
             {
-              endState = mergeUniquely(endState, epsilonClosure->closureOf(mapping->at(2)));
+              newEndState = mergeUniquely(newEndState, epsilonClosure->closureOf(iteration->at(2)));
             }
           }
         }
-        newMapEntry->push_back(element);
-        newMapEntry->push_back(charContainer);
-        newMapEntry->push_back(endState);
+        vector<string>* alphabetChar = new vector<string>();
+        alphabetChar->push_back(currentObj->at(1));
+        newMapEntry->push_back(newStartState);
+        newMapEntry->push_back(alphabetChar);
+        newMapEntry->push_back(newEndState);
         newMap->push_back(newMapEntry);
       }
     }
