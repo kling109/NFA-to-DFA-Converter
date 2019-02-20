@@ -24,7 +24,7 @@ FileIO::FileIO()
 {
   this->inputFileName = "NULL";
   this->outputFileName = "NULL";
-  this->stateSet = NULL;
+  this->stateSet = new vector<string>();
   this->alphabet = NULL;
   this->deltaFunc = new vector<vector<string>* >();
   this->startStates = NULL;
@@ -39,7 +39,7 @@ FileIO::FileIO(string inputFile)
 {
   this->inputFileName = inputFile;
   this->outputFileName = "NULL";
-  this->stateSet = NULL;
+  this->stateSet = new vector<string>();
   this->alphabet = NULL;
   this->deltaFunc = new vector<vector<string>* >();
   this->startStates = NULL;
@@ -54,7 +54,7 @@ FileIO::FileIO(string inputFile, string outputFile)
 {
   this->inputFileName = inputFile;
   this->outputFileName = outputFile;
-  this->stateSet = NULL;
+  this->stateSet = new vector<string>();
   this->alphabet = NULL;
   this->deltaFunc = new vector<vector<string>* >();
   this->startStates = NULL;
@@ -66,6 +66,7 @@ Standard deconstructor function.
 */
 FileIO::~FileIO()
 {
+  delete this->stateSet;
   delete this->deltaFunc;
 }
 
@@ -89,8 +90,7 @@ void FileIO::readFile()
     {
       switch(lineNum)
       {
-        case 0: stateSet = stringSplitter(line, "\t \n");
-                break;
+        case 0: break;
         case 1: alphabet = stringSplitter(line, "\t \n");
                 break;
         case 2: startStates = stringSplitter(line, "\t \n");
@@ -98,12 +98,34 @@ void FileIO::readFile()
         case 3: acceptStates = stringSplitter(line, "\t \n");
                 break;
         default: vector<string>* mapping = stringSplitter(line, "\t =,\n");
-                 deltaFunc->push_back(mapping);
+                 this->deltaFunc->push_back(mapping);
+                 insertUniqueElement(stateSet, mapping->at(0));
                  break;
       }
       ++lineNum;
     }
     inputStream.close();
+  }
+}
+
+/*
+Iterates through the set of existing elements in the power set, and adds the new element only
+if there is no existing copy of that set in the power set.
+*/
+void FileIO::insertUniqueElement(vector<string>* results, string entry)
+{
+  bool unique = true;
+  for (int i = 0; i < results->size(); ++i)
+  {
+    if (results->at(i) == entry)
+    {
+      unique = false;
+      break;
+    }
+  }
+  if (unique)
+  {
+    results->push_back(entry);
   }
 }
 

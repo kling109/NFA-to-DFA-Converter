@@ -16,22 +16,21 @@ Project: NFA to DFA Converter
 class PowerSetGenerator
 {
   /*
-  Produces a power set for a given input of an initial set.  Uses string vectors
-  for the input, and outputs a new stirng vector.
+  Produces a power set for a given input of an initial map.  Uses string vectors
+  for the input, and outputs a new string vector.
   */
   private:
-    std::vector<std::string>* sourceSet;
+    std::vector<std::vector<std::vector<std::string>* >* >* sourceMap;
     std::vector<std::vector<std::string>* >* powerSet;
-    void powerSetHelper(std::vector<std::vector<std::string>* >* results, std::vector<std::string>* input);
     void insertUniqueElement(std::vector<std::vector<std::string>* >* results, std::vector<std::string>* input);
   public:
     PowerSetGenerator();
-    PowerSetGenerator(std::vector<std::string>* stateSet);
+    PowerSetGenerator(std::vector<std::vector<std::vector<std::string>* >* >* map);
     ~PowerSetGenerator();
     void buildPowerSet();
-    void buildPowerSet(std::vector<std::string>* stateSet);
+    void buildPowerSet(std::vector<std::vector<std::vector<std::string>* >* >* map);
     std::vector<std::vector<std::string>* >* getPowerSet();
-    std::vector<std::vector<std::string>* >* getPowerSet(std::vector<std::string>* stateSet);
+    std::vector<std::vector<std::string>* >* getPowerSet(std::vector<std::vector<std::vector<std::string>* >* >* map);
 };
 
 #endif /* POWERSETGEN_H */

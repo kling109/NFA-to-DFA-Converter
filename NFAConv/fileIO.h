@@ -30,6 +30,7 @@ class FileIO
     std::vector<std::string>* startStates;
     std::vector<std::string>* acceptStates;
     std::vector<std::string>* stringSplitter(std::string input, std::string delimiters);
+    void insertUniqueElement(std::vector<std::string>* results, std::string input);
   public:
     FileIO();
     FileIO(std::string inputFileName);

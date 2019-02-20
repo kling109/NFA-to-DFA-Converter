@@ -22,19 +22,22 @@ vector, which will be filled with values.
 PowerSetGenerator::PowerSetGenerator()
 {
   this->powerSet = new vector<vector<string>* >();
-  this->sourceSet = NULL;
+  this->sourceMap = NULL;
 }
 
 /*
-Overloaded Constructor for the case in which a state set is supplied to the
-constructor.  Initializes both the power set and source set vectors.
+Overloaded Constructor for the case in which a mapping is supplied to the
+program.  Initializes both the power set and source map vectors.
 */
-PowerSetGenerator::PowerSetGenerator(vector<string>* stateSet)
+PowerSetGenerator::PowerSetGenerator(vector<vector<vector<string>* >* >* mapping)
 {
   this->powerSet = new vector<vector<string>* >();
-  this->sourceSet = stateSet;
+  this->sourceMap = mapping;
 }
 
+/*
+Standard deconstructor for a power set generator.
+*/
 PowerSetGenerator::~PowerSetGenerator()
 {
   if (powerSet != 0)
@@ -44,56 +47,22 @@ PowerSetGenerator::~PowerSetGenerator()
 }
 
 /*
-Method to build the power set from inputs.  The function first checks if  a
-source set has actually been supplied, and prints an error otherwise.
-The function then calls a recursive helper method to build the actual power set.
+Adds elements to the end set based on which elements of the power set are being used
+by the new delta map.  The sourece map is iterated over, checking if each element has
+been added to the set of vectors.  If it has not been, it is added.
 */
 void PowerSetGenerator::buildPowerSet()
 {
-  if (this->sourceSet == 0)
+  if (this->sourceMap == 0)
   {
-    cout << "A starting set has not been provided.  Please retry with a valid set." << endl;
+    cout << "A mapping has not been provided.  Please retry with a valid mapping." << endl;
   }
   else
   {
-    powerSetHelper(this->powerSet, this->sourceSet);
-  }
-}
-
-/*
-Recursive helper method for building a power set.  The function takes inputs for the set
-to store the resutls in as a nested vector, and the input set as a vector of strings.
-The program first checks if the input set is empty, and if so pushes "EM", the empty set,
-onto the resutls vector.  All results are added via the "insertUniqueElement" method, which
-first checks if a duplicate of the element is already in the vector before deciding whether
-to add it or not.  If the input size is not 0, the function pushes the inputs onto the vector.
-Then, the function loops through the input set and produces new sets of elements, each with
-one of the previous input elements removed.  These sets are then recursively operated on by the
-helper method.
-*/
-void PowerSetGenerator::powerSetHelper(vector<vector<string>* >* results, vector<string>* inputs)
-{
-  if (inputs->size() == 0)
-  {
-    vector<string>* nextInput = new vector<string>();
-    nextInput->push_back("EM");
-    insertUniqueElement(results, nextInput);
-  }
-  else
-  {
-    insertUniqueElement(results, inputs);
-    for (int i = 0; i < inputs->size(); ++i)
+    for (int i = 0; i < this->sourceMap->size(); ++i)
     {
-      vector<string>* nextInput = new vector<string>();
-      for (int j = 0; j < i; ++j)
-      {
-        nextInput->push_back(inputs->at(j));
-      }
-      for (int k = i+1; k < inputs->size(); ++k)
-      {
-        nextInput->push_back(inputs->at(k));
-      }
-      powerSetHelper(results, nextInput);
+      insertUniqueElement(powerSet, sourceMap->at(i)->at(0));
+      insertUniqueElement(powerSet, sourceMap->at(i)->at(2));
     }
   }
 }
@@ -120,27 +89,27 @@ void PowerSetGenerator::insertUniqueElement(vector<vector<string>* >* results, v
 }
 
 /*
-Builds the power set of a given state set.  The given state set will
-override a state that was applied when the constructor was called.
-The function is simply a macro for reassigning the stateSet and then calling
+Builds the power set of a given map.  The given mapping will
+override a map that was applied when the constructor was called.
+The function is simply a macro for reassigning the soureMap and then calling
 the build function.
 */
-void PowerSetGenerator::buildPowerSet(vector<string>* stateSet)
+void PowerSetGenerator::buildPowerSet(vector<vector<vector<string>* >* >* mapping)
 {
-  this->sourceSet = stateSet;
+  this->sourceMap = mapping;
   buildPowerSet();
 }
 
 /*
-Returns the power set if and only if it has been built.  If a state has been
+Returns the power set if and only if it has been built.  If a mapping has been
 provided but the build has not occured, then the power set is built before being returned.
-The function displays an error message if the program has not been provided any input set.
+The function displays an error message if the program has not been provided any input map.
 */
 vector<vector<string>* >* PowerSetGenerator::getPowerSet()
 {
   if (this->powerSet->size() == 0)
   {
-    if (this->sourceSet == 0)
+    if (this->sourceMap == 0)
     {
       cout << "A starting set has not been provided.  Please retry with a valid set." << endl;
     }
@@ -157,11 +126,11 @@ vector<vector<string>* >* PowerSetGenerator::getPowerSet()
 }
 
 /*
-A macro for assigning the state set, building and returning the power set.
+A macro for assigning the mapping, building and returning the power set.
 */
-vector<vector<string>* >* PowerSetGenerator::getPowerSet(vector<string>* stateSet)
+vector<vector<string>* >* PowerSetGenerator::getPowerSet(vector<vector<vector<string>* >* >* mapping)
 {
-  this->sourceSet = stateSet;
+  this->sourceMap = mapping;
   buildPowerSet();
   return this->powerSet;
 }

@@ -79,12 +79,13 @@ void DFAGenerator::generateDFA()
   {
     FileIO* fileManager = new FileIO(this->inputFileName, this->outputFileName);
     fileManager->readFile();
-    EpsilonClosureGenerator* ecg = new EpsilonClosureGenerator(fileManager->getDelta());
-    PowerSetGenerator* psg = new PowerSetGenerator(fileManager->getStates());
+    DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta());
+    vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
+    PowerSetGenerator* psg = new PowerSetGenerator(newDelta);
     psg->buildPowerSet();
     vector<vector<string>* >* newSet = psg->getPowerSet();
-    DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta(), newSet, fileManager->getAlphabet());
     vector<vector<string>* >* newStartStates = new vector<vector<string>* >();
+    EpsilonClosureGenerator* ecg = new EpsilonClosureGenerator(fileManager->getDelta());
     for (int i = 0; i < fileManager->getStartStates()->size(); ++i)
     {
       newStartStates->push_back(ecg->closureOf(fileManager->getStartStates()->at(i)));
@@ -94,7 +95,6 @@ void DFAGenerator::generateDFA()
     {
       newAcceptStates->push_back(ecg->closureOf(fileManager->getAcceptStates()->at(i)));
     }
-    vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
     fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
     fileManager->~FileIO();
     ecg->~EpsilonClosureGenerator();

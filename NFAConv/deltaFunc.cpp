@@ -23,8 +23,6 @@ DeltaGenerator::DeltaGenerator()
 {
   this->epsilonClosure = NULL;
   this->deltaMap = NULL;
-  this->powerSet = NULL;
-  this->alphabet = NULL;
 }
 
 /*
@@ -35,31 +33,6 @@ DeltaGenerator::DeltaGenerator(vector<vector<string>* >* transitionMap)
 {
   this->epsilonClosure = new EpsilonClosureGenerator(transitionMap);
   this->deltaMap = transitionMap;
-  this->powerSet = NULL;
-  this->alphabet = NULL;
-}
-
-/*
-Overloaded constructor for a Delta Generator.  Establishes values for both transitions
-and the input set.
-*/
-DeltaGenerator::DeltaGenerator(vector<vector<string>* >* transitionMap, vector<vector<string>* >* set)
-{
-  this->epsilonClosure = new EpsilonClosureGenerator(transitionMap);
-  this->deltaMap = transitionMap;
-  this->powerSet = set;
-  this->alphabet = NULL;
-}
-
-/*
-Overloaded constructor for a Delta Generator.  Establishes values for all objects.
-*/
-DeltaGenerator::DeltaGenerator(vector<vector<string>* >* transitionMap, vector<vector<string>* >* set, vector<string>* alph)
-{
-  this->epsilonClosure = new EpsilonClosureGenerator(transitionMap);
-  this->deltaMap = transitionMap;
-  this->powerSet = set;
-  this->alphabet = alph;
 }
 
 /*
@@ -72,14 +45,6 @@ DeltaGenerator::~DeltaGenerator()
   {
     delete this->epsilonClosure;
   }
-}
-
-/*
-Setter method for the given alphabet.
-*/
-void DeltaGenerator::setAlphabet(vector<string>* alph)
-{
-  this->alphabet = alph;
 }
 
 /*
@@ -100,30 +65,13 @@ void DeltaGenerator::setMapping(vector<vector<string>* >* transitionMap)
 }
 
 /*
-Setter method for the given power set.
-*/
-void DeltaGenerator::setPowerSet(vector<vector<string>* >* set)
-{
-  this->powerSet = set;
-}
 
-/*
-Produces a new delta function based on the set of inputs.  The function begins by
-establishing the existence of a mapping, a powerset, and an alphabet as they are
-essential to the program.  If all three are initialized, then the function produces a new
-vector object to contain the new mapping.  The inputs to this map will be vectors of vectors, as
-each power set object itself is a vector.  The format of the new mapping is now a nested
-vector, where the initial vector contains vectors corresponding to the delta mappings, with
-the first vector in the double nested vector being the input states, the second being the
-alphabet character, and the third being the end state.  This vector is produced by iterating
-over all combinations of power set elements and alphabet characters, then finding what power set
-element all their mappings constitute.
 */
 vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
 {
-  if (this->deltaMap == 0 || this->powerSet == 0 || this->alphabet == 0)
+  if (this->deltaMap == 0)
   {
-    cout << "A mapping or a set was not provided." << endl;
+    cout << "A mapping was not provided." << endl;
   }
   else
   {
@@ -188,22 +136,11 @@ vector<string>* DeltaGenerator::mergeUniquely(vector<string>* endSet, vector<str
 }
 
 /*
-Overloaded method for the power set delta generator.  Allows the power set to
-be changed before the new delta function is produced.
-*/
-vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen(vector<vector<string>* >* set)
-{
-  this->setPowerSet(set);
-  return this->powerSetDeltaMapGen();
-}
-
-/*
 Overloaded method for the power set delta generator.  Allows both the power set and
 the initial mapping to be changed before the new delta function is produced.
 */
-vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen(vector<vector<string>* >* transitionMap, vector<vector<string>* >* set)
+vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen(vector<vector<string>* >* transitionMap)
 {
   this->setMapping(transitionMap);
-  this->setPowerSet(set);
   return this->powerSetDeltaMapGen();
 }
