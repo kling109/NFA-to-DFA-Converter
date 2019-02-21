@@ -65,7 +65,12 @@ void DeltaGenerator::setMapping(vector<vector<string>* >* transitionMap)
 }
 
 /*
-
+A generator method for the new delta map.  The program iterates over all existing mappings in the
+NFA, taking the epsilon closure of each start state.  The new element of the powerset is then checked
+against all elements in the mapping, to find any possible mappings as a result of the given alphabet
+character.  These end results are then compoinded into another elment of the power set, and once the
+new mapping has checked every one of the original delta function transitions, the new mapping is pushed
+into a new vector for the overall map.
 */
 vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
 {

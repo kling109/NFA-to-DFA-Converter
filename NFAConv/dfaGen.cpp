@@ -71,7 +71,12 @@ void DFAGenerator::setOutputFile(string outputFile)
 }
 
 /*
-
+Main data handling method for the DFA generator.  The method takes a supplied file name and
+supplied output name, and subsequently reads in the file.  The process then uses the
+DeltaGenerator to make a new delta map.  This map is then used to find the new set of states.
+Subsequently, the epsilon closure of the given accept states and start states is taken to find
+new start/accept states.  Finally, all of this information is written to the given output file,
+and all the data is deleted.
 */
 void DFAGenerator::generateDFA()
 {
