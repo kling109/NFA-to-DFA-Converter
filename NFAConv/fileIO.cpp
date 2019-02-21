@@ -3,7 +3,7 @@ Name: Trevor Kling
 ID: 002270716
 Email: kling109@mail.chapman.edu
 Course: CPSC 406 Algorithm Analysis
-Last Date Modified: 16 February 2019
+Last Date Modified: 21 February 2019
 Project: NFA to DFA Converter
 */
 
@@ -53,7 +53,7 @@ file and output file names.
 FileIO::FileIO(string inputFile, string outputFile)
 {
   this->inputFileName = inputFile;
-  this->outputFileName = outputFile;
+  this->outputFileName = outputFile + ".DFA";
   this->stateSet = new vector<string>();
   this->alphabet = NULL;
   this->deltaFunc = new vector<vector<string>* >();
@@ -90,7 +90,7 @@ void FileIO::readFile()
     {
       switch(lineNum)
       {
-        case 0: break;
+        case 0: break;  // The initial list of states is not actually needed, as all used states will appear in the delta function later.
         case 1: alphabet = stringSplitter(line, "\t \n");
                 break;
         case 2: startStates = stringSplitter(line, "\t \n");
@@ -185,13 +185,17 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       for (int j = 0; j < powerSet->at(i)->size(); ++j)
       {
         outputStream << powerSet->at(i)->at(j);
+        if (j < powerSet->at(i)->size()-1)
+        {
+          outputStream << ", ";
+        }
       }
-      outputStream << "}  ";
+      outputStream << "}\t";
     }
     outputStream << endl;
     for (int i = 0; i < alphabet->size(); ++i)
     {
-      outputStream << alphabet->at(i) << "  ";
+      outputStream << alphabet->at(i) << " \t";
     }
     outputStream << endl;
     for (int i = 0; i < startSet->size(); ++i)
@@ -200,8 +204,12 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       for (int j = 0; j < startSet->at(i)->size(); ++j)
       {
         outputStream << startSet->at(i)->at(j);
+        if (j < startSet->at(i)->size()-1)
+        {
+          outputStream << ", ";
+        }
       }
-      outputStream << "}  ";
+      outputStream << "}\t";
     }
     outputStream << endl;
     for (int i = 0; i < acceptSet->size(); ++i)
@@ -210,30 +218,52 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
       for (int j = 0; j < acceptSet->at(i)->size(); ++j)
       {
         outputStream << acceptSet->at(i)->at(j);
+        if (j < acceptSet->at(i)->size()-1)
+        {
+          outputStream << ", ";
+        }
       }
-      outputStream << "}  ";
+      outputStream << "}\t";
     }
     outputStream << endl;
     for (int i = 0; i < map->size(); ++i)
     {
       for (int j = 0; j < map->at(i)->size(); ++j)
       {
-        outputStream << "{";
-        for (int k = 0; k < map->at(i)->at(j)->size(); ++k)
-        {
-          outputStream << map->at(i)->at(j)->at(k);
-        }
-        outputStream << "}";
         if (j == 0)
         {
-          outputStream << ",";
+          outputStream << "{";
+          for (int k = 0; k < map->at(i)->at(j)->size(); ++k)
+          {
+            outputStream << map->at(i)->at(j)->at(k);
+            if (k < map->at(i)->at(j)->size()-1)
+            {
+              outputStream << ", ";
+            }
+          }
+          outputStream << "}";
+          outputStream << ", ";
         }
         else if (j == 1)
         {
+          for (int k = 0; k < map->at(i)->at(j)->size(); ++k)
+          {
+            outputStream << map->at(i)->at(j)->at(k);
+          }
           outputStream << " = ";
         }
         else if (j == 2)
         {
+          outputStream << "{";
+          for (int k = 0; k < map->at(i)->at(j)->size(); ++k)
+          {
+            outputStream << map->at(i)->at(j)->at(k);
+            if (k < map->at(i)->at(j)->size()-1)
+            {
+              outputStream << ", ";
+            }
+          }
+          outputStream << "}";
           outputStream << endl;
         }
       }
@@ -243,11 +273,12 @@ void FileIO::writeFile(vector<vector<string>* >* powerSet, vector<string>* alpha
 }
 
 /*
-
+Overloaded function for writing to a file.  Takes an argument for the output file name, then writes
+the contents to the file.
 */
 void FileIO::writeFile(string fileName, vector<vector<string>* >* powerSet, vector<string>* alphabet, vector<vector<vector<string>* >* >* map, vector<vector<string>* >* startSet, vector<vector<string>* >* acceptSet)
 {
-  this->outputFileName = fileName;
+  this->outputFileName = fileName + ".DFA";
   writeFile(powerSet, alphabet, map, startSet, acceptSet);
 }
 

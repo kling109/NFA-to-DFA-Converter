@@ -13,9 +13,31 @@ Project: NFA to DFA Converter
 
 using namespace std;
 
-int main()
+/*
+Main function for the DFA converter.  Handles interfacing with the user, taking inputs for
+file names.
+*/
+int main(int argc, char** argv)
 {
-  DFAGenerator* testGen = new DFAGenerator("testTextFile.txt", "testOutput.txt");
+  string inputFileName;
+  string outputFileName;
+  switch (argc)
+  {
+    case 1: cout << "Input a formatted file name: ";
+            cin >> inputFileName;
+            cout << "Input a desired output file name:";
+            cin >> outputFileName;
+            break;
+    case 2: inputFileName = argv[1];
+            cout << "Input a desired output file name:";
+            cin >> outputFileName;
+            break;
+    default: inputFileName = argv[1];
+             outputFileName = argv[2];
+             break;
+  }
+  DFAGenerator* testGen = new DFAGenerator(inputFileName, outputFileName);
   testGen->generateDFA();
   testGen->~DFAGenerator();
+  return 0;
 }

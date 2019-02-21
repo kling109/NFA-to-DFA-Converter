@@ -3,7 +3,7 @@ Name: Trevor Kling
 ID: 002270716
 Email: kling109@mail.chapman.edu
 Course: CPSC 406 Algorithm Analysis
-Last Date Modified: 16 February 2019
+Last Date Modified: 21 February 2019
 Project: NFA to DFA Converter
 */
 
@@ -84,11 +84,14 @@ void DFAGenerator::generateDFA()
   {
     FileIO* fileManager = new FileIO(this->inputFileName, this->outputFileName);
     fileManager->readFile();
+    // Building the new map
     DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta());
     vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
+    // Building the new set of elements
     PowerSetGenerator* psg = new PowerSetGenerator(newDelta);
     psg->buildPowerSet();
     vector<vector<string>* >* newSet = psg->getPowerSet();
+    // Obtaining the new set of start and accept states
     vector<vector<string>* >* newStartStates = new vector<vector<string>* >();
     EpsilonClosureGenerator* ecg = new EpsilonClosureGenerator(fileManager->getDelta());
     for (int i = 0; i < fileManager->getStartStates()->size(); ++i)
@@ -100,8 +103,10 @@ void DFAGenerator::generateDFA()
     {
       newAcceptStates->push_back(ecg->closureOf(fileManager->getAcceptStates()->at(i)));
     }
+    // Writing the obtained information to a file
     fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
     fileManager->~FileIO();
+    // Clearing all allocated data
     ecg->~EpsilonClosureGenerator();
     psg->~PowerSetGenerator();
     dg->~DeltaGenerator();
