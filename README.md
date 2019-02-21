@@ -16,6 +16,9 @@ None.
 
 ## Sources
 http://www.cplusplus.com/reference/vector/vector/
+
 http://www.cplusplus.com/reference/istream/istream/
+
 http://www.cplusplus.com/reference/ostream/ostream/
+
 https://www.cs.swarthmore.edu/~newhall/unixhelp/howto_makefiles.html
