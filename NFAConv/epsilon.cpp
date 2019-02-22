@@ -10,6 +10,7 @@ Project: NFA to DFA Converter
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "epsilon.h"
 
 using namespace std;
@@ -37,7 +38,7 @@ Default deconstructor.  Checks to be sure that deltaMap is not null before delet
 */
 EpsilonClosureGenerator::~EpsilonClosureGenerator()
 {
-  
+
 }
 
 /*
@@ -69,6 +70,7 @@ vector<string>* EpsilonClosureGenerator::closureOf(string state)
         insertUniqueElement(closureSet, deltaMap->at(i)->at(2));
       }
     }
+    sort(closureSet->begin(), closureSet->end());
     return closureSet;
   }
   else

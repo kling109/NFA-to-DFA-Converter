@@ -10,6 +10,7 @@ Project: NFA to DFA Converter
 #include <string>
 #include <vector>
 #include <iostream>
+#include <algorithm>
 #include "deltaFunc.h"
 #include "epsilon.h"
 
@@ -87,10 +88,10 @@ vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
       vector<string>* currentObj = this->deltaMap->at(i);
       if (currentObj->at(1) != "EPS")
       {
-        vector<vector<string>* >* newMapEntry = new vector<vector<string>* >();
         vector<string>* newStartState = epsilonClosure->closureOf(currentObj->at(0));
         vector<string>* newEndState = epsilonClosure->closureOf(currentObj->at(2));
-        for (int j = 1; j < newStartState->size(); ++j)
+        vector<vector<string>* >* newMapEntry = new vector<vector<string>* >();
+        for (int j = 0; j < newStartState->size(); ++j)
         {
           for (int k = 0; k < this->deltaMap->size(); ++k)
           {
@@ -98,6 +99,7 @@ vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
             if (newStartState->at(j) == iteration->at(0) && currentObj->at(1) == iteration->at(1))
             {
               newEndState = mergeUniquely(newEndState, epsilonClosure->closureOf(iteration->at(2)));
+              sort(newEndState->begin(), newEndState->end());
             }
           }
         }
@@ -106,7 +108,22 @@ vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
         newMapEntry->push_back(newStartState);
         newMapEntry->push_back(alphabetChar);
         newMapEntry->push_back(newEndState);
-        newMap->push_back(newMapEntry);
+        bool uniqueEntry = true;
+        for (int j = 0; j < newMap->size(); ++j)
+        {
+          if (*newMapEntry->at(0) == *newMap->at(j)->at(0) && *newMapEntry->at(1) == *newMap->at(j)->at(1) && *newMapEntry->at(2) == *newMap->at(j)->at(2))
+          {
+            uniqueEntry = false;
+          }
+        }
+        if (uniqueEntry)
+        {
+          newMap->push_back(newMapEntry);
+        }
+        else
+        {
+          delete newMapEntry;
+        }
       }
     }
     return newMap;
