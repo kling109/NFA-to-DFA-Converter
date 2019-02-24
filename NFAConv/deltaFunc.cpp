@@ -24,6 +24,7 @@ DeltaGenerator::DeltaGenerator()
 {
   this->epsilonClosure = NULL;
   this->deltaMap = NULL;
+  this->alphabet = NULL;
 }
 
 /*
@@ -34,6 +35,18 @@ DeltaGenerator::DeltaGenerator(vector<vector<string>* >* transitionMap)
 {
   this->epsilonClosure = new EpsilonClosureGenerator(transitionMap);
   this->deltaMap = transitionMap;
+  this->alphabet = NULL;
+}
+
+/*
+Overloaded constructor for a Delta Generator.  Produces the EpsilonClosureGenerator
+object for use later, when given a transition map.
+*/
+DeltaGenerator::DeltaGenerator(vector<vector<string>* >* transitionMap, vector<string>* alph)
+{
+  this->epsilonClosure = new EpsilonClosureGenerator(transitionMap);
+  this->deltaMap = transitionMap;
+  this->alphabet = alph;
 }
 
 /*
@@ -65,6 +78,15 @@ void DeltaGenerator::setMapping(vector<vector<string>* >* transitionMap)
   }
 }
 
+
+/*
+Setter method for the alphabet being used.
+*/
+void DeltaGenerator::setAlphabet(vector<string>* alph)
+{
+  this->alphabet = alph;
+}
+
 /*
 A generator method for the new delta map.  The program iterates over all existing mappings in the
 NFA, taking the epsilon closure of each start state.  The new element of the powerset is then checked
@@ -75,54 +97,48 @@ into a new vector for the overall map.
 */
 vector<vector<vector<string>* >* >* DeltaGenerator::powerSetDeltaMapGen()
 {
-  if (this->deltaMap == 0)
+  if (this->deltaMap == 0 || this->alphabet == 0)
   {
-    cout << "A mapping was not provided." << endl;
+    cout << "A mapping or alphabet was not provided." << endl;
   }
   else
   {
     vector<vector<vector<string>* >* >* newMap = new vector<vector<vector<string>* >* >();
+    vector<vector<string>* >* newMapStateSet = new vector<vector<string>* >();
     for (int i = 0; i < this->deltaMap->size(); ++i)
     {
-      // One iteration for each mapping
-      vector<string>* currentObj = this->deltaMap->at(i);
-      if (currentObj->at(1) != "EPS")
+      insertUniqueElement(newMapStateSet, epsilonClosure->closureOf(this->deltaMap->at(i)->at(0)));
+      insertUniqueElement(newMapStateSet, epsilonClosure->closureOf(this->deltaMap->at(i)->at(2)));
+    }
+    for (int i = 0; i < newMapStateSet->size(); ++i)
+    {
+      for (int j = 0; j < this->alphabet->size(); ++j)
       {
-        vector<string>* newStartState = epsilonClosure->closureOf(currentObj->at(0));
-        vector<string>* newEndState = epsilonClosure->closureOf(currentObj->at(2));
-        vector<vector<string>* >* newMapEntry = new vector<vector<string>* >();
-        for (int j = 0; j < newStartState->size(); ++j)
+        vector<vector<string>* >* newMapElement = new vector<vector<string>* >();
+        vector<string>* newStartState = newMapStateSet->at(i);
+        vector<string>* alphabetChar = new vector<string>();
+        vector<string>* newEndState = new vector<string>();
+        alphabetChar->push_back(this->alphabet->at(j));
+        for (int k = 0; k < this->deltaMap->size(); ++k)
         {
-          for (int k = 0; k < this->deltaMap->size(); ++k)
+          for (int l = 0; l < newStartState->size(); ++l)
           {
-            vector<string>* iteration = this->deltaMap->at(k);
-            if (newStartState->at(j) == iteration->at(0) && currentObj->at(1) == iteration->at(1))
+            if (this->deltaMap->at(k)->at(0) == newStartState->at(l) && this->deltaMap->at(k)->at(1) == alphabetChar->at(0))
             {
-              newEndState = mergeUniquely(newEndState, epsilonClosure->closureOf(iteration->at(2)));
-              sort(newEndState->begin(), newEndState->end());
+              mergeUniquely(newEndState, epsilonClosure->closureOf(this->deltaMap->at(k)->at(2)));
             }
           }
         }
-        vector<string>* alphabetChar = new vector<string>();
-        alphabetChar->push_back(currentObj->at(1));
-        newMapEntry->push_back(newStartState);
-        newMapEntry->push_back(alphabetChar);
-        newMapEntry->push_back(newEndState);
-        bool uniqueEntry = true;
-        for (int j = 0; j < newMap->size(); ++j)
+        if (newEndState->size() != 0)
         {
-          if (*newMapEntry->at(0) == *newMap->at(j)->at(0) && *newMapEntry->at(1) == *newMap->at(j)->at(1) && *newMapEntry->at(2) == *newMap->at(j)->at(2))
-          {
-            uniqueEntry = false;
-          }
-        }
-        if (uniqueEntry)
-        {
-          newMap->push_back(newMapEntry);
+          newMapElement->push_back(newStartState);
+          newMapElement->push_back(alphabetChar);
+          newMapElement->push_back(newEndState);
+          newMap->push_back(newMapElement);
         }
         else
         {
-          delete newMapEntry;
+          delete newMapElement;
         }
       }
     }
@@ -136,7 +152,7 @@ duplicates.  The function iterates through the input vector, checking it against
 elements of the output vector.  If none of the elements match, the input is merged into the
 output vector.  If the element matches, the element is discarded.
 */
-vector<string>* DeltaGenerator::mergeUniquely(vector<string>* endSet, vector<string>* candidate)
+void DeltaGenerator::mergeUniquely(vector<string>* endSet, vector<string>* candidate)
 {
   for (int i = 0; i < candidate->size(); ++i)
   {
@@ -154,7 +170,27 @@ vector<string>* DeltaGenerator::mergeUniquely(vector<string>* endSet, vector<str
       endSet->push_back(candidate->at(i));
     }
   }
-  return endSet;
+}
+
+/*
+Iterates through the set of existing elements in the power set, and adds the new element only
+if there is no existing copy of that set in the power set.
+*/
+void DeltaGenerator::insertUniqueElement(vector<vector<string>* >* results, vector<string>* entry)
+{
+  bool unique = true;
+  for (int i = 0; i < results->size(); ++i)
+  {
+    if (*results->at(i) == *entry)
+    {
+      unique = false;
+      break;
+    }
+  }
+  if (unique)
+  {
+    results->push_back(entry);
+  }
 }
 
 /*

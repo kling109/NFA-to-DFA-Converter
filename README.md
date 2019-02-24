@@ -12,7 +12,7 @@ This program seeks to provide a framework to convert non-deterministic finite st
 The program is written in C++, using only default libraries.  Compile and run on the Linux command line with g++.  Requires C++ 11 or higher.  File name inputs are taken from the command line.
 
 ## Known Issues
-Need to refactor delta function generator; does not check for paths from epsilon closed objects correctly.
+None.
 
 ## Sources
 http://www.cplusplus.com/reference/vector/vector/

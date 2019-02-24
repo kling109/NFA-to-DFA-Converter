@@ -30,6 +30,7 @@ class PowerSetGenerator
     void buildPowerSet();
     void buildPowerSet(std::vector<std::vector<std::vector<std::string>* >* >* map);
     std::vector<std::vector<std::string>* >* getPowerSet();
+    std::vector<std::vector<std::string>* >* getPowerSet(std::vector<std::vector<std::string>* >* map);
     std::vector<std::vector<std::string>* >* getPowerSet(std::vector<std::vector<std::vector<std::string>* >* >* map);
 };
 

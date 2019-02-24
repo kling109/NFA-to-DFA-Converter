@@ -23,12 +23,16 @@ class DeltaGenerator
   private:
     EpsilonClosureGenerator* epsilonClosure;
     std::vector<std::vector<std::string>* >* deltaMap;
-    std::vector<std::string>* mergeUniquely(std::vector<std::string>* endSet, std::vector<std::string>* candidate);
+    std::vector<std::string>* alphabet;
+    void mergeUniquely(std::vector<std::string>* endSet, std::vector<std::string>* candidate);
+    void insertUniqueElement(std::vector<std::vector<std::string>* >* results, std::vector<std::string>* entry);
   public:
     DeltaGenerator();
     DeltaGenerator(std::vector<std::vector<std::string>* >* transitionMap);
+    DeltaGenerator(std::vector<std::vector<std::string>* >* transitionMap, std::vector<std::string>* alphabet);
     ~DeltaGenerator();
     void setMapping(std::vector<std::vector<std::string>* >* transitionMap);
+    void setAlphabet(std::vector<std::string>* alph);
     std::vector<std::vector<std::vector<std::string>* >* >* powerSetDeltaMapGen();
     std::vector<std::vector<std::vector<std::string>* >* >* powerSetDeltaMapGen(std::vector<std::vector<std::string>* >* transitionMap);
 };

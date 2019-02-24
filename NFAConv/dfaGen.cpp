@@ -85,7 +85,7 @@ void DFAGenerator::generateDFA()
     FileIO* fileManager = new FileIO(this->inputFileName, this->outputFileName);
     fileManager->readFile();
     // Building the new map
-    DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta());
+    DeltaGenerator* dg = new DeltaGenerator(fileManager->getDelta(), fileManager->getAlphabet());
     vector<vector<vector<string>* >* >* newDelta = dg->powerSetDeltaMapGen();
     // Building the new set of elements
     PowerSetGenerator* psg = new PowerSetGenerator(newDelta);
