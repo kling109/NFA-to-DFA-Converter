@@ -74,8 +74,10 @@ void DFAGenerator::setOutputFile(string outputFile)
 Main data handling method for the DFA generator.  The method takes a supplied file name and
 supplied output name, and subsequently reads in the file.  The process then uses the
 DeltaGenerator to make a new delta map.  This map is then used to find the new set of states.
-Subsequently, the epsilon closure of the given accept states and start states is taken to find
-new start/accept states.  Finally, all of this information is written to the given output file,
+Subsequently, the epsilon closure of the given start states is taken to find
+new start states.  The set of elements is then checked through against all elements
+of the original accept states, to find any elements containing an accept state.
+Finally, all of this information is written to the given output file,
 and all the data is deleted.
 */
 void DFAGenerator::generateDFA()
@@ -99,9 +101,19 @@ void DFAGenerator::generateDFA()
       newStartStates->push_back(ecg->closureOf(fileManager->getStartStates()->at(i)));
     }
     vector<vector<string>* >* newAcceptStates = new vector<vector<string>* >();
-    for (int i = 0; i < fileManager->getAcceptStates()->size(); ++i)
+    vector<string>* originalAcceptStates = fileManager->getAcceptStates();
+    for (int i = 0; i < newSet->size(); ++i)
     {
-      newAcceptStates->push_back(ecg->closureOf(fileManager->getAcceptStates()->at(i)));
+      for (int j = 0; j < newSet->at(i)->size(); ++j)
+      {
+        for (int k = 0; k < originalAcceptStates->size(); ++k)
+        {
+          if (newSet->at(i)->at(j) == originalAcceptStates->at(k))
+          {
+            newAcceptStates->push_back(newSet->at(i));
+          }
+        }
+      }
     }
     // Writing the obtained information to a file
     fileManager->writeFile(newSet, fileManager->getAlphabet(), newDelta, newStartStates, newAcceptStates);
